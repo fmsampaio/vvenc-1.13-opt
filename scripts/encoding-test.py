@@ -1,6 +1,6 @@
 from AsyncManager import AsyncManager
 
-BASE_FOLDER = '/home/research-data/rodrigo/vtm-search'
+BASE_FOLDER = '/home/research-data/rodrigo/vvenc-search'
 
 VVENC_CMD = f'{BASE_FOLDER}/vvenc-1.13-opt/bin/release-static/vvencFFapp'
 ENCODER_CFG = f'{BASE_FOLDER}/vvenc-1.13-opt/cfg'
