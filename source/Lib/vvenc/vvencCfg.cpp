@@ -709,6 +709,8 @@ VVENC_DECL void vvenc_config_default(vvenc_config *c )
   memset( c->m_reservedInt8, 0, sizeof(c->m_reservedInt8) );
   memset( c->m_reservedDouble, 0, sizeof(c->m_reservedDouble) );
 
+  memset( c->m_reportTimeProfileName    , '\0', sizeof(c->m_reportTimeProfileName) );
+
   // init default preset
   vvenc_init_preset( c, vvencPresetMode::VVENC_MEDIUM );
 }

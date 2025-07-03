@@ -93,6 +93,10 @@ namespace vvenc {
 #define ENABLE_TRACING                                    0 // DISABLED by default (enable only when debugging, requires additional runtime)
 #endif
 
+#ifndef ENABLE_TIME_PROFILING_INTER
+#define ENABLE_TIME_PROFILING_INTER                             1 // DISABLED by default (enable QT-depths time profiling for inter-frame prediction)
+#endif
+
 #ifndef ENABLE_TIME_PROFILING
 #define ENABLE_TIME_PROFILING                             0 // DISABLED by default (can be enabled by project configuration or make command)
 #endif

@@ -570,6 +570,8 @@ int parse( int argc, char* argv[], vvenc_config* c, std::ostream& rcOstr )
   IStreamToArr<char>                toTraceFile                   ( &c->m_traceFile[0], VVENC_MAX_STRING_LEN  );
   IStreamToArr<char>                toSummaryOutFilename          ( &c->m_summaryOutFilename[0], VVENC_MAX_STRING_LEN  );
   IStreamToArr<char>                toSummaryPicFilenameBase      ( &c->m_summaryPicFilenameBase[0], VVENC_MAX_STRING_LEN  );
+  IStreamToArr<char>                toTimeProfileFilename          ( &c->m_reportTimeProfileName[0], VVENC_MAX_STRING_LEN  );
+  
 
   IStreamToFunc<int>                toSaoWithScc                  ( setSAO, this, c, &SaoToIntMap, 0 );
 
@@ -1060,6 +1062,9 @@ int parse( int argc, char* argv[], vvenc_config* c, std::ostream& rcOstr )
     ("SummaryOutFilename",                              toSummaryOutFilename,                                "Filename to use for producing summary output file. If empty, do not produce a file.")
     ("SummaryPicFilenameBase",                          toSummaryPicFilenameBase,                            "Base filename to use for producing summary picture output files. The actual filenames used will have I.txt, P.txt and B.txt appended. If empty, do not produce a file.")
     ("SummaryVerboseness",                              c->m_summaryVerboseness,                             "Specifies the level of the verboseness of the text output")
+
+    ("TimeProfileFileName",                             toTimeProfileFilename,                               "Filename to time profile report of inter-frame prediction.")
+
     ;
 
     opts.setSubSection("Coding tools");
@@ -1165,6 +1170,7 @@ int parse( int argc, char* argv[], vvenc_config* c, std::ostream& rcOstr )
     opts.addOptions()
     ("ClipOutputVideoToRec709Range",                    m_bClipOutputVideoToRec709Range,                     "Enable clipping output video to the Rec. 709 Range on saving when OutputBitDepth is less than InternalBitDepth")
     ("PYUV",                                            m_packedYUVOutput,                                   "Enable output 10-bit and 12-bit YUV data as 5-byte and 3-byte (respectively) packed YUV data. Ignored for interlaced output.")
+
     ;
   }
 
