@@ -60,6 +60,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "CommonLib/TimeProfiler.h"
 #include "CommonLib/SearchSpaceCounter.h"
 
+#include "CommonLib/TimeProfilerInter.h"
+
 #include <mutex>
 #include <cmath>
 #include <algorithm>
@@ -2919,6 +2921,14 @@ void EncCu::xCheckRDCostIBCMode(CodingStructure*& tempCS, CodingStructure*& best
 
 void EncCu::xCheckRDCostInter( CodingStructure *&tempCS, CodingStructure *&bestCS, Partitioner &partitioner, const EncTestMode& encTestMode )
 {
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerInter::start(INTER_OVERALL);
+
+  STAGE interStage = (STAGE) partitioner.currQtDepth;
+  TimeProfilerInter::start(interStage);
+#endif
+
   PROFILER_SCOPE_AND_STAGE_EXT( 1, _TPROF, P_INTER_MVD, tempCS, partitioner.chType );
   tempCS->initStructData( encTestMode.qp );
 
@@ -3029,10 +3039,24 @@ void EncCu::xCheckRDCostInter( CodingStructure *&tempCS, CodingStructure *&bestC
   }
   STAT_COUNT_CU_MODES( partitioner.chType == CH_L, g_cuCounters1D[CU_MODES_TESTED][0][!tempCS->slice->isIntra() + tempCS->slice->depth] );
   STAT_COUNT_CU_MODES( partitioner.chType == CH_L && !tempCS->slice->isIntra(), g_cuCounters2D[CU_MODES_TESTED][Log2( tempCS->area.lheight() )][Log2( tempCS->area.lwidth() )] );
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerInter::stop(interStage);
+  TimeProfilerInter::stop(INTER_OVERALL);
+#endif  
 }
 
 void EncCu::xCheckRDCostInterIMV(CodingStructure *&tempCS, CodingStructure *&bestCS, Partitioner &partitioner, const EncTestMode& encTestMode)
 {
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerInter::start(INTER_OVERALL);
+
+  STAGE interStage = (STAGE) partitioner.currQtDepth;
+  TimeProfilerInter::start(interStage);
+#endif
+
+
   PROFILER_SCOPE_AND_STAGE_EXT( 1, _TPROF, P_INTER_MVD_IMV, tempCS, partitioner.chType );
   bool Test_AMVR = m_pcEncCfg->m_AMVRspeed ? true: false;
   if (m_pcEncCfg->m_AMVRspeed > 2 && m_pcEncCfg->m_AMVRspeed < 5 && !bestCS->cus.empty() && bestCS->getCU(partitioner.chType, partitioner.treeType)->skip)
@@ -3301,6 +3325,11 @@ void EncCu::xCheckRDCostInterIMV(CodingStructure *&tempCS, CodingStructure *&bes
   }
   STAT_COUNT_CU_MODES( partitioner.chType == CH_L, g_cuCounters1D[CU_MODES_TESTED][0][!tempCS->slice->isIntra() + tempCS->slice->depth] );
   STAT_COUNT_CU_MODES( partitioner.chType == CH_L && !tempCS->slice->isIntra(), g_cuCounters2D[CU_MODES_TESTED][Log2( tempCS->area.lheight() )][Log2( tempCS->area.lwidth() )] );
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerInter::stop(interStage);
+  TimeProfilerInter::stop(INTER_OVERALL);
+#endif 
 }
 
 void EncCu::xCalDebCost( CodingStructure &cs, Partitioner &partitioner )

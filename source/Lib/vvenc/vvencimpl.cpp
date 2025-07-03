@@ -59,6 +59,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "EncoderLib/EncGOP.h"
 #include "EncoderLib/EncLib.h"
 
+#include "CommonLib/TimeProfilerInter.h"
+
 #if ENABLE_SIMD_TRAFO
 #include "CommonLib/TrQuant_EMT.h"
 #endif  // ENABLE_SIMD_TRAFO
@@ -129,6 +131,7 @@ int VVEncImpl::checkConfig( const vvenc_config& config )
 
 int VVEncImpl::init( vvenc_config* config )
 {
+
   if( m_bInitialized ){ return VVENC_ERR_INITIALIZE; }
 
   if (nullptr == config)
@@ -173,6 +176,11 @@ int VVEncImpl::init( vvenc_config* config )
     m_cErrorString = e.what();
     return VVENC_ERR_UNSPECIFIED;
   }
+#endif
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerInter::init(m_cVVEncCfg.m_reportTimeProfileName);
+  TimeProfilerInter::start(ENCODER_OVERALL);
 #endif
 
   m_bInitialized = true;
@@ -560,6 +568,12 @@ int VVEncImpl::getNumTrailFrames() const
 
 int VVEncImpl::printSummary() const
 {
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerInter::stop(ENCODER_OVERALL);
+  TimeProfilerInter::report();
+#endif
+
   if( !m_bInitialized ){ return -1; }
   if( nullptr == m_pEncLib )  { return -1; }
 

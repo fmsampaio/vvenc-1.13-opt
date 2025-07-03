@@ -794,6 +794,8 @@ typedef struct vvenc_config
   vvencLoggingCallback m_msgFnc;                                                         // logger callback function (internal info/errors will use this function to return log messages)
   void                *m_msgCtx;                                                         // caller context ( if not needed null )
 
+  char                m_reportTimeProfileName[VVENC_MAX_STRING_LEN];                     // filename to use for inter time profiler output. 
+
 }vvenc_config;
 
 /* vvenc_config_default
