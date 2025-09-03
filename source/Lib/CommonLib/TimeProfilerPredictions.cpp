@@ -1,13 +1,13 @@
-#include "TimeProfilerInter.h"
+#include "TimeProfilerPredictions.h"
 
-std::vector<time_point> TimeProfilerInter::previous;
-std::vector<duration> TimeProfilerInter::durations;
-std::vector<int> TimeProfilerInter::calls;
-std::string TimeProfilerInter::reportFileName;
+std::vector<time_point> TimeProfilerPredictions::previous;
+std::vector<duration> TimeProfilerPredictions::durations;
+std::vector<int> TimeProfilerPredictions::calls;
+std::string TimeProfilerPredictions::reportFileName;
 
-std::map<STAGE, std::string> TimeProfilerInter::stageToString;
+std::map<STAGE, std::string> TimeProfilerPredictions::stageToString;
 
-void TimeProfilerInter::init(char fileName[])  {
+void TimeProfilerPredictions::init(char fileName[])  {
     durations.resize( NUM_STAGES );
     previous.resize( NUM_STAGES );
     calls.resize( NUM_STAGES );
@@ -28,17 +28,17 @@ void TimeProfilerInter::init(char fileName[])  {
     reportFileName = fileName;
 }
 
-void TimeProfilerInter::start( STAGE s ) {
+void TimeProfilerPredictions::start( STAGE s ) {
     previous[s] = clock_s::now();
 }
 
-void TimeProfilerInter::stop( STAGE s ) {
+void TimeProfilerPredictions::stop( STAGE s ) {
     time_point now = clock_s::now();
     durations[s] += ( now - previous[s] );
     calls[s] ++;
 }
 
-void TimeProfilerInter::report() {    
+void TimeProfilerPredictions::report() {    
     std::ofstream reportFp;
     reportFp.open(reportFileName);
     

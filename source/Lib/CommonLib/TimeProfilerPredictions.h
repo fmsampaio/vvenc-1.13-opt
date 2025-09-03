@@ -28,7 +28,7 @@ typedef std::chrono::steady_clock clock_s;
 typedef std::chrono::time_point<clock_s> time_point;
 typedef std::chrono::duration<double, rep> duration;
 
-class TimeProfilerInter {  
+class TimeProfilerPredictions {  
 
   public:
     static std::vector<time_point> previous;

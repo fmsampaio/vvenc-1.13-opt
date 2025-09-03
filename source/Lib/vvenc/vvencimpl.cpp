@@ -59,7 +59,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "EncoderLib/EncGOP.h"
 #include "EncoderLib/EncLib.h"
 
-#include "CommonLib/TimeProfilerInter.h"
+#include "CommonLib/TimeProfilerPredictions.h"
 
 #if ENABLE_SIMD_TRAFO
 #include "CommonLib/TrQuant_EMT.h"
@@ -179,8 +179,8 @@ int VVEncImpl::init( vvenc_config* config )
 #endif
 
 #if ENABLE_TIME_PROFILING_INTER
-  TimeProfilerInter::init(m_cVVEncCfg.m_reportTimeProfileName);
-  TimeProfilerInter::start(ENCODER_OVERALL);
+  TimeProfilerPredictions::init(m_cVVEncCfg.m_reportTimeProfileName);
+  TimeProfilerPredictions::start(ENCODER_OVERALL);
 #endif
 
   m_bInitialized = true;
@@ -570,8 +570,8 @@ int VVEncImpl::printSummary() const
 {
 
 #if ENABLE_TIME_PROFILING_INTER
-  TimeProfilerInter::stop(ENCODER_OVERALL);
-  TimeProfilerInter::report();
+  TimeProfilerPredictions::stop(ENCODER_OVERALL);
+  TimeProfilerPredictions::report();
 #endif
 
   if( !m_bInitialized ){ return -1; }
