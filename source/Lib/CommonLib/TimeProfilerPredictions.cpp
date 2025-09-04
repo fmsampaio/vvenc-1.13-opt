@@ -17,13 +17,14 @@ void TimeProfilerPredictions::init(char fileName[])  {
         calls[i] = 0;
     }
 
-    stageToString[QT_LEVEL_0]= "QT_0";
-    stageToString[QT_LEVEL_1] = "QT_1";
-    stageToString[QT_LEVEL_2] = "QT_2";
-    stageToString[QT_LEVEL_3] = "QT_3";
-    stageToString[QT_LEVEL_4] = "QT_4";
+    stageToString[INTRA_OVERALL] = "INTRA";
     stageToString[INTER_OVERALL] = "INTER";
-    stageToString[ENCODER_OVERALL] ="ENCODER";
+
+    stageToString[INTER_IME] = "INTER_IME";
+    stageToString[INTER_FME] = "INTER_FME";
+    stageToString[INTER_AME] = "INTER_AME";
+
+    stageToString[ENCODER_OVERALL] = "ENCODER";
 
     reportFileName = fileName;
 }

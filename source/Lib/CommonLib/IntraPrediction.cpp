@@ -52,6 +52,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "InterpolationFilter.h"
 #include "dtrace_next.h"
 
+#include "TimeProfilerPredictions.h"
+
 #include <memory.h>
 
 //! \ingroup CommonLib

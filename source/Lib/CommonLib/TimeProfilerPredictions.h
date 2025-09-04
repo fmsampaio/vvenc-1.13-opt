@@ -12,15 +12,16 @@
 #include <map>
 
 enum STAGE {  
-  QT_LEVEL_0 = 0,
-  QT_LEVEL_1 = 1,
-  QT_LEVEL_2 = 2,
-  QT_LEVEL_3 = 3,
-  QT_LEVEL_4 = 4,
-  INTER_OVERALL = 5,
-  ENCODER_OVERALL = 6,
+  ENCODER_OVERALL = 0,
 
-  NUM_STAGES = 7
+  INTRA_OVERALL = 1,
+  INTER_OVERALL = 2,
+
+  INTER_IME = 3,
+  INTER_FME = 4,
+  INTER_AME = 5,
+  
+  NUM_STAGES = 6
 };
 
 typedef std::milli rep;

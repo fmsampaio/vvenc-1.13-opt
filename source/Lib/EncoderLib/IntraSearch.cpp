@@ -57,6 +57,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <math.h>
 #include "vvenc/vvencCfg.h"
 
+#include "CommonLib/TimeProfilerPredictions.h"
+
 //! \ingroup EncoderLib
 //! \{
 

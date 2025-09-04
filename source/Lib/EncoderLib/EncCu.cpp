@@ -1376,6 +1376,11 @@ void EncCu::xCheckModeSplitInternal(CodingStructure *&tempCS, CodingStructure *&
 
 void EncCu::xCheckRDCostIntra( CodingStructure *&tempCS, CodingStructure *&bestCS, Partitioner &partitioner, const EncTestMode& encTestMode )
 {
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerPredictions::start(INTRA_OVERALL);
+#endif
+
   PROFILER_SCOPE_AND_STAGE_EXT( 1, _TPROF, P_INTRA, tempCS, partitioner.chType );
 
   tempCS->initStructData( encTestMode.qp, false ); // clear motion buffer
@@ -1513,6 +1518,11 @@ void EncCu::xCheckRDCostIntra( CodingStructure *&tempCS, CodingStructure *&bestC
 
   STAT_COUNT_CU_MODES( partitioner.chType == CH_L, g_cuCounters1D[CU_MODES_TESTED][0][!tempCS->slice->isIntra() + tempCS->slice->depth] );
   STAT_COUNT_CU_MODES( partitioner.chType == CH_L && !tempCS->slice->isIntra(), g_cuCounters2D[CU_MODES_TESTED][Log2( tempCS->area.lheight() )][Log2( tempCS->area.lwidth() )] );
+
+#if ENABLE_TIME_PROFILING_INTER
+  TimeProfilerPredictions::stop(INTRA_OVERALL);
+#endif
+
 }
 
 void EncCu::xCheckDQP( CodingStructure& cs, Partitioner& partitioner, bool bKeepCtx )
@@ -2924,9 +2934,6 @@ void EncCu::xCheckRDCostInter( CodingStructure *&tempCS, CodingStructure *&bestC
 
 #if ENABLE_TIME_PROFILING_INTER
   TimeProfilerPredictions::start(INTER_OVERALL);
-
-  STAGE interStage = (STAGE) partitioner.currQtDepth;
-  TimeProfilerPredictions::start(interStage);
 #endif
 
   PROFILER_SCOPE_AND_STAGE_EXT( 1, _TPROF, P_INTER_MVD, tempCS, partitioner.chType );
@@ -3041,7 +3048,6 @@ void EncCu::xCheckRDCostInter( CodingStructure *&tempCS, CodingStructure *&bestC
   STAT_COUNT_CU_MODES( partitioner.chType == CH_L && !tempCS->slice->isIntra(), g_cuCounters2D[CU_MODES_TESTED][Log2( tempCS->area.lheight() )][Log2( tempCS->area.lwidth() )] );
 
 #if ENABLE_TIME_PROFILING_INTER
-  TimeProfilerPredictions::stop(interStage);
   TimeProfilerPredictions::stop(INTER_OVERALL);
 #endif  
 }

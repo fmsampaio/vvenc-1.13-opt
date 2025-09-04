@@ -58,6 +58,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "CommonLib/dtrace_buffer.h"
 #include "CommonLib/TimeProfiler.h"
 
+#include "CommonLib/TimeProfilerPredictions.h"
+
 #include <math.h>
 
  //! \ingroup EncoderLib
@@ -1973,6 +1975,7 @@ Distortion InterSearch::xGetTemplateCost( const CodingUnit& cu,
 
 void InterSearch::xMotionEstimation(CodingUnit& cu, CPelUnitBuf& origBuf, RefPicList refPicList, Mv& rcMvPred, int iRefIdxPred, Mv& rcMv, int& riMVPIdx, uint32_t& ruiBits, Distortion& ruiCost, const AMVPInfo& amvpInfo, bool bBi)
 {
+
   if( cu.cs->sps->BCW && cu.BcwIdx != BCW_DEFAULT && !bBi && xReadBufferedUniMv( cu, refPicList, iRefIdxPred, rcMvPred, rcMv, ruiBits, ruiCost ) )
   {
     return;
@@ -2040,6 +2043,10 @@ void InterSearch::xMotionEstimation(CodingUnit& cu, CPelUnitBuf& origBuf, RefPic
   m_pcRdCost->setPredictor( predQuarter );
   m_pcRdCost->setCostScale(2);
 
+  #if ENABLE_TIME_PROFILING_INTER
+    TimeProfilerPredictions::start(INTER_IME);
+  #endif
+
   //  Do integer search
   if( m_motionEstimationSearchMethod == VVENC_MESEARCH_FULL || bBi )
   {
@@ -2104,7 +2111,17 @@ void InterSearch::xMotionEstimation(CodingUnit& cu, CPelUnitBuf& origBuf, RefPic
     relatedCU.setMv( refPicList, iRefIdxPred, rcMv );
   }
 
+  #if ENABLE_TIME_PROFILING_INTER
+    TimeProfilerPredictions::stop(INTER_IME);
+  #endif
+
   DTRACE( g_trace_ctx, D_ME, "%d %d %d :MECostFPel<L%d,%d>: %d,%d,%dx%d, %d", DTRACE_GET_COUNTER( g_trace_ctx, D_ME ), cu.slice->poc, 0, ( int ) refPicList, ( int ) bBi, cu.Y().x, cu.Y().y, cu.Y().width, cu.Y().height, ruiCost );
+
+  #if ENABLE_TIME_PROFILING_INTER
+    TimeProfilerPredictions::start(INTER_FME);
+  #endif
+
+
   // sub-pel refinement for sub-pel resolution
   if ( cu.imv == 0 || cu.imv == IMV_HPEL )
   {
@@ -2126,6 +2143,11 @@ void InterSearch::xMotionEstimation(CodingUnit& cu, CPelUnitBuf& origBuf, RefPic
     rcMv.changePrecision(MV_PRECISION_INT, MV_PRECISION_INTERNAL);
     xPatternSearchIntRefine( cu, cStruct, rcMv, rcMvPred, riMVPIdx, ruiBits, ruiCost, amvpInfo, fWeight);
   }
+
+  #if ENABLE_TIME_PROFILING_INTER
+    TimeProfilerPredictions::stop(INTER_FME);
+  #endif
+
   DTRACE(g_trace_ctx, D_ME, "   MECost<L%d,%d>: %6d (%d)  MV:%d,%d\n", (int)refPicList, (int)bBi, ruiCost, ruiBits, rcMv.hor << 2, rcMv.ver << 2);
 }
 
@@ -5358,10 +5380,16 @@ void InterSearch::xAffineMotionEstimation(CodingUnit& cu,
   const AffineAMVPInfo& aamvpi,
   bool            bBi)
 {
+
+
   if( cu.cs->sps->BCW && cu.BcwIdx != BCW_DEFAULT && !bBi && xReadBufferedAffineUniMv( cu, refPicList, iRefIdxPred, acMvPred, acMv, ruiBits, ruiCost, mvpIdx, aamvpi ) )
   {
     return;
   }
+
+  #if ENABLE_TIME_PROFILING_INTER
+    TimeProfilerPredictions::start(INTER_AME);
+  #endif
 
   int bestMvpIdx = mvpIdx;
   const int width = cu.Y().width;
@@ -5732,6 +5760,11 @@ void InterSearch::xAffineMotionEstimation(CodingUnit& cu,
 
   ruiBits = uiBitsBest;
   ruiCost = uiCostBest;
+
+  #if ENABLE_TIME_PROFILING_INTER
+    TimeProfilerPredictions::stop(INTER_AME);
+  #endif
+
   DTRACE(g_trace_ctx, D_COMMON, " (%d) uiBitsBest=%d, uiCostBest=%d\n", DTRACE_GET_COUNTER(g_trace_ctx, D_COMMON), uiBitsBest, uiCostBest);
 }
 
