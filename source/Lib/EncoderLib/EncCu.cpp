@@ -61,6 +61,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "CommonLib/SearchSpaceCounter.h"
 
 #include "CommonLib/TimeProfilerInter.h"
+#include "CommonLib/TraceIntraCUs.h"
 
 #include <mutex>
 #include <cmath>
@@ -812,6 +813,8 @@ void EncCu::xCompressCU( CodingStructure*& tempCS, CodingStructure*& bestCS, Par
         EncTestMode encTestMode( {ETM_INTRA, ETO_STANDARD, qp, lossless} );
         if( !partitioner.isConsInter() && m_modeCtrl.tryMode( encTestMode, cs, partitioner ) )
         {
+          //TODO Felipe
+          TraceIntraCUs::trace(slice.pic->poc, partitioner.currArea().lwidth(), partitioner.currArea().lheight());
           xCheckRDCostIntra( tempCS, bestCS, partitioner, encTestMode );
         }
       } // reusing cu

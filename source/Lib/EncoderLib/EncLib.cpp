@@ -58,6 +58,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "EncGOP.h"
 #include "CommonLib/x86/CommonDefX86.h"
 
+#include "CommonLib/TraceIntraCUs.h"
+
 //! \ingroup EncoderLib
 //! \{
 
@@ -111,6 +113,8 @@ void EncLib::initEncoderLib( const vvenc_config& encCfg )
 {
   // copy config parameter
   const_cast<VVEncCfg&>(m_encCfg) = encCfg;
+
+  TraceIntraCUs::init();
 
 #if defined( REAL_TARGET_X86 ) && defined( _MSC_VER ) && _MSC_VER >= 1938 && _MSC_VER < 1939
   if( read_x86_extension_flags() >= x86_simd::AVX2 )
@@ -188,6 +192,7 @@ void EncLib::uninitEncoderLib()
   g_timeProfiler = nullptr;
 #endif
   xUninitLib();
+  TraceIntraCUs::finish();
 }
 
 void EncLib::initPass( int pass, const char* statsFName )
